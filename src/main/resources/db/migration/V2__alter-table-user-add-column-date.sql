@@ -1,0 +1,1 @@
+alter table users add date datetime not null;
