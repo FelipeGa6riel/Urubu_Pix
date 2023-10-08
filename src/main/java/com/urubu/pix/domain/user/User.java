@@ -1,9 +1,11 @@
 package com.urubu.pix.domain.user;
 
+import com.urubu.pix.dtos.DataUser;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity(name = "users")
 @Table(name = "users")
@@ -23,5 +25,19 @@ public class User {
     @Column(unique = true)
     private String cpf;
     private BigDecimal balance;
+    private LocalDate date = LocalDate.now();
 
+    public User(DataUser dataUser) {
+        this.id = dataUser.id();
+        this.nome = dataUser.nome();
+        this.email = dataUser.email();
+        this.cpf = dataUser.cpf();
+        this.balance = dataUser.balance();
+    }
+
+    public void updateUser(DataUser dataUser) {
+        this.nome = dataUser.nome();
+        this.email = dataUser.email();
+        this.balance = dataUser.balance();
+    }
 }
