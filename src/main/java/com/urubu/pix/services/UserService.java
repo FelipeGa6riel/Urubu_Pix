@@ -1,11 +1,13 @@
 package com.urubu.pix.services;
 
 import com.urubu.pix.domain.user.User;
+import com.urubu.pix.dtos.DataUser;
 import com.urubu.pix.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -23,8 +25,17 @@ public class UserService {
     public User finduserById(Long id) throws RuntimeException{
       return this.repository.findUserById(id).orElseThrow(() -> new RuntimeException("Usuario não existe ou não encontrado"));
     };
+    public User createUser(DataUser dataUser){
+        var user = new User(dataUser);
+        this.saveUser(user);
+        return user;
+    }
 
+    public List<User> finAllUsers() {
+        return this.repository.findAll();
+    }
     public void saveUser(User user) {
         repository.save(user);
     }
+
 }
