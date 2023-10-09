@@ -22,7 +22,7 @@ public class UserService {
         }
     }
 
-    public User finduserById(Long id) throws RuntimeException{
+    public User findUserById(Long id) throws RuntimeException{
       return this.repository.findUserById(id).orElseThrow(() -> new RuntimeException("Usuario não existe ou não encontrado"));
     };
     public User createUser(DataUser dataUser){
