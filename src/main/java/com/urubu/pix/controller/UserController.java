@@ -46,7 +46,7 @@ public class UserController {
     @PutMapping
     @Transactional
     public ResponseEntity<User> updateUserData(@RequestBody DataUser dataUser) {
-        var user = userService.finduserById(dataUser.id());
+        var user = userService.findUserById(dataUser.id());
         user.updateUser(dataUser);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
