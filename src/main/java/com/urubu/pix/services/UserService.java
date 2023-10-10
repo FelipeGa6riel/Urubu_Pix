@@ -23,13 +23,19 @@ public class UserService {
     }
 
     public User findUserById(Long id) throws RuntimeException{
-      return this.repository.findUserById(id).orElseThrow(() -> new RuntimeException("Usuario não existe ou não encontrado"));
+      return this.repository.findUserById(id);
+//              orElseThrow(() -> new RuntimeException("Usuario não existe ou não encontrado"));
     };
     public User createUser(DataUser dataUser){
         var user = new User(dataUser);
         this.saveUser(user);
         return user;
     }
+
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
+    }
+
 
     public List<User> finAllUsers() {
         return this.repository.findAll();
