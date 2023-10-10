@@ -1,6 +1,7 @@
 package com.urubu.pix.services;
 
 import com.urubu.pix.domain.transaction.Transaction;
+import com.urubu.pix.dtos.DataDeposit;
 import com.urubu.pix.dtos.DataTransaction;
 import com.urubu.pix.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +37,21 @@ public class TransactionService {
         return transaction;
     }
 
+    public Transaction cashDeposit(DataDeposit dataDeposit) {
+        var sender = userService.findUserById(dataDeposit.senderId());
+        var receiver = userService.findUserById(dataDeposit.senderId());
+
+        var transaction = new Transaction();
+
+        transaction.setAmount(dataDeposit.value());
+        transaction.setSender(sender);
+        transaction.setReceiver(sender);
+        transaction.setData(LocalDateTime.now());
+
+        sender.setBalance(sender.getBalance().add(dataDeposit.value()));
+        repository.save(transaction);
+        userService.saveUser(sender);
+
+        return transaction;
+    }
 }
