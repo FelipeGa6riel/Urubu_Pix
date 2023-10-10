@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name="transactions")
 @Table(name="transactions")
@@ -29,6 +29,6 @@ public class Transaction {
     @JoinColumn(name = "receiver_id")
     private User receiver;
 
-    private LocalDate timeStamp;
+    private LocalDateTime data;
 
 }
