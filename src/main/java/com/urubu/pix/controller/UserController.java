@@ -45,12 +45,4 @@ public class UserController {
         user.updateUser(dataUser);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
-
-    @PutMapping("/{id}")
-    @Transactional
-    public ResponseEntity<User> updateBalance(@PathVariable Long id,@RequestBody DataUser dataUser) {
-        var user = userService.findUserById(id);
-        user.updateBalanceUser(user,dataUser.balance());
-        return new ResponseEntity<>(user,HttpStatus.OK);
-    }
 }
