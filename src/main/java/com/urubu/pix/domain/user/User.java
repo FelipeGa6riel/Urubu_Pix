@@ -38,6 +38,10 @@ public class User {
     public void updateUser(DataUser dataUser) {
         this.nome = dataUser.nome();
         this.email = dataUser.email();
-        this.balance = dataUser.balance();
+    }
+
+    public void updateBalanceUser(User user,BigDecimal balance){
+        user.setBalance(user.balance.add(balance));
+        System.out.println("dataUser.balance() = " + balance);
     }
 }
