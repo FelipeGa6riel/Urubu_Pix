@@ -54,4 +54,21 @@ public class TransactionService {
 
         return transaction;
     }
+
+    public Transaction createWithDraw(DataDeposit dataDeposit) {
+        var withDraw = userService.findUserById(dataDeposit.senderId());
+        var withDraw = userService.findUserById(dataDeposit.senderId());
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(dataDeposit.valuea());
+        transaction.setSender(withDraw);
+        transaction.setReceiver(withDraw);
+
+        withDraw.setBalance(withDraw.getBalance().subtract(dataDeposit.value()));
+
+        userService.save(withDraw);
+        repository.save(transaction);
+
+        return transaction;
+    }
 }
