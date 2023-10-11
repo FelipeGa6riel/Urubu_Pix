@@ -57,7 +57,6 @@ public class TransactionService {
 
     public Transaction createWithDraw(DataDeposit dataDeposit) {
         var withDraw = userService.findUserById(dataDeposit.senderId());
-        var withDraw = userService.findUserById(dataDeposit.senderId());
 
         Transaction transaction = new Transaction();
         transaction.setAmount(dataDeposit.valuea());
