@@ -52,4 +52,12 @@ public class TransactionController {
         var dataTransactionListPage = transactionRepository.findTransactioByUserId(dataTransaction.senderId(), pageable);
         return new ResponseEntity<>(dataTransactionListPage,HttpStatus.OK);
     }
+
+    @PutMapping("/")
+    @Transactional
+    public ResponseEntity<Transaction> createWithDraw(@RequestBody DataDeposit dataDeposit) {
+      var withDraw = transactionService.createWithDraw(dataDeposit);
+
+        return new ResponseEntity<Transaction>(withDraw, HttpStatus.ACCEPTED);
+    }
 }
