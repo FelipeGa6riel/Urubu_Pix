@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class TransactionService {
+    
     @Autowired
     private UserService userService;
 
@@ -39,7 +40,6 @@ public class TransactionService {
 
     public Transaction cashDeposit(DataDeposit dataDeposit) {
         var sender = userService.findUserById(dataDeposit.senderId());
-        var receiver = userService.findUserById(dataDeposit.senderId());
 
         var transaction = new Transaction();
 
@@ -59,13 +59,13 @@ public class TransactionService {
         var withDraw = userService.findUserById(dataDeposit.senderId());
 
         Transaction transaction = new Transaction();
-        transaction.setAmount(dataDeposit.valuea());
+        transaction.setAmount(dataDeposit.value());
         transaction.setSender(withDraw);
-        transaction.setReceiver(withDraw);
+        transaction.setReceiver(withDraw); 
 
         withDraw.setBalance(withDraw.getBalance().subtract(dataDeposit.value()));
 
-        userService.save(withDraw);
+        userService.saveUser(withDraw);
         repository.save(transaction);
 
         return transaction;
