@@ -1,6 +1,7 @@
 package com.urubu.pix.controller;
 
 import com.urubu.pix.domain.transaction.Transaction;
+import com.urubu.pix.domain.user.User;
 import com.urubu.pix.dtos.DataDeposit;
 import com.urubu.pix.dtos.DataTransaction;
 import com.urubu.pix.repositories.TransactionRepository;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.Optional;
 
 @RestController
@@ -35,7 +38,7 @@ public class TransactionController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Transaction> cashDeposit(@RequestBody DataDeposit dataDeposit) {
+    public ResponseEntity<User> cashDeposit(@RequestBody DataDeposit dataDeposit) {
         var deposit = transactionService.cashDeposit(dataDeposit);
 
         return new ResponseEntity<>(deposit,HttpStatus.OK);
@@ -48,16 +51,24 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DataTransaction>> listTransactioByUserId(@RequestBody DataTransaction dataTransaction,@PageableDefault(page=0, size=10,sort={"data"}) Pageable pageable) {
+    public ResponseEntity<Page<DataTransaction>> listTransactioByUserId(@RequestBody DataTransaction dataTransaction,@PageableDefault(page=0, size=10,sort={"timeStamp"}) Pageable pageable) {
         var dataTransactionListPage = transactionRepository.findTransactioByUserId(dataTransaction.senderId(), pageable);
         return new ResponseEntity<>(dataTransactionListPage,HttpStatus.OK);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Transaction> createWithDraw(@RequestBody DataDeposit dataDeposit) {
-      var withDraw = transactionService.createWithDraw(dataDeposit);
+    public ResponseEntity<User> createWithDraw(@RequestBody DataDeposit dataDeposit) {
+      var userWithDraw = transactionService.createWithDraw(dataDeposit);
 
-        return new ResponseEntity<Transaction>(withDraw, HttpStatus.ACCEPTED);
+      return new ResponseEntity<User>(userWithDraw, HttpStatus.ACCEPTED);
     }
+
+//    @PutMapping("/{id}")
+//    @Transactional
+//    public ResponseEntity<BigDecimal> createWithDraw(@PathVariable Long id ) {
+//        var diferenca = transactionService.getData(id);
+//
+//        return new ResponseEntity<BigDecimal>(diferenca, HttpStatus.ACCEPTED);
+//    }
 }

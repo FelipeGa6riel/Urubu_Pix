@@ -17,7 +17,7 @@ public class UserService {
 
     public void  validateTransaction(User user, BigDecimal amount) {
 
-        if(user.getBalance().compareTo(amount) <= 0) {
+        if(user.getBalance().compareTo(amount) < 0) {
             throw new RuntimeException("Saldo insuficiente");
         }
     }
