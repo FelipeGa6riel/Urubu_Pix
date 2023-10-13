@@ -12,6 +12,6 @@ public record DataUser(
         BigDecimal balance) {
 
     public  DataUser(User user){
-        this(user.getId(),user.getNome(),user.getEmail(),user.getCpf(),user.getBalance());
+        this(user.getId(),user.getName(),user.getEmail(),user.getCpf(),user.getBalance());
     }
 }

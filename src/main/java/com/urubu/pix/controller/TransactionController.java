@@ -1,6 +1,7 @@
 package com.urubu.pix.controller;
 
 import com.urubu.pix.domain.transaction.Transaction;
+import com.urubu.pix.domain.user.User;
 import com.urubu.pix.dtos.DataDeposit;
 import com.urubu.pix.dtos.DataTransaction;
 import com.urubu.pix.repositories.TransactionRepository;
@@ -29,15 +30,14 @@ public class TransactionController {
     @PostMapping
     @Transactional
     public ResponseEntity<Transaction> createTransaction(@RequestBody DataTransaction dataTransaction) {
-        var transaction = transactionService.createTransaction(dataTransaction);
+        var transaction = transactionService.createTransfer(dataTransaction);
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Transaction> cashDeposit(@RequestBody DataDeposit dataDeposit) {
-        var deposit = transactionService.cashDeposit(dataDeposit);
-
+    public ResponseEntity<User> cashDeposit(@RequestBody DataDeposit dataDeposit) {
+        var deposit = transactionService.createDeposit(dataDeposit);
         return new ResponseEntity<>(deposit,HttpStatus.OK);
     }
 
@@ -48,16 +48,16 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DataTransaction>> listTransactioByUserId(@RequestBody DataTransaction dataTransaction,@PageableDefault(page=0, size=10,sort={"data"}) Pageable pageable) {
-        var dataTransactionListPage = transactionRepository.findTransactioByUserId(dataTransaction.senderId(), pageable);
+    public ResponseEntity<Page<DataTransaction>> listTransactioByUserId(@RequestBody DataTransaction dataTransaction,@PageableDefault(page=0, size=10,sort={"timeStamp"}) Pageable pageable) {
+        var dataTransactionListPage = transactionRepository.findTransactionsByUserId(dataTransaction.senderId(), pageable);
         return new ResponseEntity<>(dataTransactionListPage,HttpStatus.OK);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Transaction> createWithDraw(@RequestBody DataDeposit dataDeposit) {
-      var withDraw = transactionService.createWithDraw(dataDeposit);
+    public ResponseEntity<User> createWithDraw(@RequestBody DataDeposit dataDeposit) {
+      var userWithDraw = transactionService.createWithDraw(dataDeposit);
 
-        return new ResponseEntity<Transaction>(withDraw, HttpStatus.ACCEPTED);
+      return new ResponseEntity<User>(userWithDraw, HttpStatus.ACCEPTED);
     }
 }

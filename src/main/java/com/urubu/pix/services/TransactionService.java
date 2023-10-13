@@ -1,6 +1,8 @@
 package com.urubu.pix.services;
 
 import com.urubu.pix.domain.transaction.Transaction;
+import com.urubu.pix.domain.transaction.TypeTransaction;
+import com.urubu.pix.domain.user.User;
 import com.urubu.pix.dtos.DataDeposit;
 import com.urubu.pix.dtos.DataTransaction;
 import com.urubu.pix.repositories.TransactionRepository;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-
 @Service
 public class TransactionService {
     
@@ -16,58 +17,66 @@ public class TransactionService {
     private UserService userService;
 
     @Autowired
-    private TransactionRepository repository;
+    private TransactionRepository transactionRepository;
 
-    public Transaction createTransaction(DataTransaction dataTransation) {
-        var sender = this.userService.findUserById(dataTransation.senderId());
-        var receiver = this.userService.findUserById(dataTransation.receiverId());
+    public Transaction createTransfer(DataTransaction dataTransaction) {
+        var sender = this.userService.findUserById(dataTransaction.senderId());
+        var receiver = this.userService.findUserById(dataTransaction.receiverId());
 
-        userService.validateTransaction(sender,dataTransation.value());
+        userService.validateTransaction(sender,dataTransaction.value());
+
         Transaction transaction = new Transaction();
-        transaction.setAmount(dataTransation.value());
+        transaction.setAmount(dataTransaction.value());
         transaction.setSender(sender);
+        transaction.setTypeTransaction(dataTransaction.typeTransaction());
         transaction.setReceiver(receiver);
-        transaction.setData(LocalDateTime.now());
+        transaction.setTimeStamp(LocalDateTime.now());
 
-        sender.setBalance(sender.getBalance().subtract(dataTransation.value()));
-        receiver.setBalance(receiver.getBalance().add(dataTransation.value()));
+        sender.setBalance(sender.getBalance().subtract(dataTransaction.value()));
+        receiver.setBalance(receiver.getBalance().add(dataTransaction.value()));
 
-        repository.save(transaction);
+        transactionRepository.save(transaction);
         userService.saveUser(sender);
         userService.saveUser(receiver);
         return transaction;
     }
 
-    public Transaction cashDeposit(DataDeposit dataDeposit) {
+    public User createDeposit(DataDeposit dataDeposit) {
         var sender = userService.findUserById(dataDeposit.senderId());
 
         var transaction = new Transaction();
 
         transaction.setAmount(dataDeposit.value());
         transaction.setSender(sender);
+        if(dataDeposit.typeTransaction().equals(TypeTransaction.DEPOSIT)) {
+            transaction.setTypeTransaction(dataDeposit.typeTransaction());
+        }
         transaction.setReceiver(sender);
-        transaction.setData(LocalDateTime.now());
+        transaction.setTimeStamp(LocalDateTime.now());
 
         sender.setBalance(sender.getBalance().add(dataDeposit.value()));
-        repository.save(transaction);
+        transactionRepository.save(transaction);
         userService.saveUser(sender);
 
-        return transaction;
+        return sender;
     }
 
-    public Transaction createWithDraw(DataDeposit dataDeposit) {
+    public User createWithDraw(DataDeposit dataDeposit) {
         var withDraw = userService.findUserById(dataDeposit.senderId());
 
+        userService.validateTransaction(withDraw,dataDeposit.value());
         Transaction transaction = new Transaction();
         transaction.setAmount(dataDeposit.value());
+        transaction.setTypeTransaction(TypeTransaction.WITHDRAW);
         transaction.setSender(withDraw);
-        transaction.setReceiver(withDraw); 
+        transaction.setReceiver(withDraw);
+        transaction.setTimeStamp(LocalDateTime.now());
 
         withDraw.setBalance(withDraw.getBalance().subtract(dataDeposit.value()));
 
         userService.saveUser(withDraw);
-        repository.save(transaction);
+        transactionRepository.save(transaction);
 
-        return transaction;
+        return withDraw;
     }
 }
