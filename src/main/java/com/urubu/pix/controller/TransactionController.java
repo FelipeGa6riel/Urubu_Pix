@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.Optional;
 
 @RestController
@@ -32,15 +30,14 @@ public class TransactionController {
     @PostMapping
     @Transactional
     public ResponseEntity<Transaction> createTransaction(@RequestBody DataTransaction dataTransaction) {
-        var transaction = transactionService.createTransaction(dataTransaction);
+        var transaction = transactionService.createTransfer(dataTransaction);
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<User> cashDeposit(@RequestBody DataDeposit dataDeposit) {
-        var deposit = transactionService.cashDeposit(dataDeposit);
-
+        var deposit = transactionService.createDeposit(dataDeposit);
         return new ResponseEntity<>(deposit,HttpStatus.OK);
     }
 
@@ -52,7 +49,7 @@ public class TransactionController {
 
     @GetMapping
     public ResponseEntity<Page<DataTransaction>> listTransactioByUserId(@RequestBody DataTransaction dataTransaction,@PageableDefault(page=0, size=10,sort={"timeStamp"}) Pageable pageable) {
-        var dataTransactionListPage = transactionRepository.findTransactioByUserId(dataTransaction.senderId(), pageable);
+        var dataTransactionListPage = transactionRepository.findTransactionsByUserId(dataTransaction.senderId(), pageable);
         return new ResponseEntity<>(dataTransactionListPage,HttpStatus.OK);
     }
 
@@ -63,12 +60,4 @@ public class TransactionController {
 
       return new ResponseEntity<User>(userWithDraw, HttpStatus.ACCEPTED);
     }
-
-//    @PutMapping("/{id}")
-//    @Transactional
-//    public ResponseEntity<BigDecimal> createWithDraw(@PathVariable Long id ) {
-//        var diferenca = transactionService.getData(id);
-//
-//        return new ResponseEntity<BigDecimal>(diferenca, HttpStatus.ACCEPTED);
-//    }
 }
