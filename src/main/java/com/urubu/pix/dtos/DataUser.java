@@ -9,9 +9,10 @@ public record DataUser(
         String nome,
         String email,
         String cpf,
+        String password,
         BigDecimal balance) {
 
     public  DataUser(User user){
-        this(user.getId(),user.getName(),user.getEmail(),user.getCpf(),user.getBalance());
+        this(user.getId(),user.getName(),user.getEmail(),user.getCpf(),user.getPassword(),user.getBalance());
     }
 }
