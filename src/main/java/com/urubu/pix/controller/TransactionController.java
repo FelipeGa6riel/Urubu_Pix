@@ -27,20 +27,6 @@ public class TransactionController {
     @Autowired
     TransactionRepository transactionRepository;
 
-    @PostMapping
-    @Transactional
-    public ResponseEntity<Transaction> createTransaction(@RequestBody DataTransaction dataTransaction) {
-        var transaction = transactionService.createTransfer(dataTransaction);
-        return new ResponseEntity<>(transaction, HttpStatus.OK);
-    }
-
-    @PutMapping
-    @Transactional
-    public ResponseEntity<User> cashDeposit(@RequestBody DataDeposit dataDeposit) {
-        var deposit = transactionService.createDeposit(dataDeposit);
-        return new ResponseEntity<>(deposit,HttpStatus.OK);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Transaction>> listTransactionId(@PathVariable Long id) {
         var transaction = transactionRepository.findById(id);
@@ -53,7 +39,21 @@ public class TransactionController {
         return new ResponseEntity<>(dataTransactionListPage,HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/transfer")
+    @Transactional
+    public ResponseEntity<Transaction> createTransaction(@RequestBody DataTransaction dataTransaction) {
+        var transaction = transactionService.createTransfer(dataTransaction);
+        return new ResponseEntity<>(transaction, HttpStatus.OK);
+    }
+
+    @PostMapping("/deposit")
+    @Transactional
+    public ResponseEntity<User> cashDeposit(@RequestBody DataDeposit dataDeposit) {
+        var deposit = transactionService.createDeposit(dataDeposit);
+        return new ResponseEntity<>(deposit,HttpStatus.OK);
+    }
+
+    @PostMapping("/withdraw")
     @Transactional
     public ResponseEntity<User> createWithDraw(@RequestBody DataDeposit dataDeposit) {
       var userWithDraw = transactionService.createWithDraw(dataDeposit);

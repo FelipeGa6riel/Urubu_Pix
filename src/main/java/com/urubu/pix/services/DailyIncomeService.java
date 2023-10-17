@@ -24,12 +24,11 @@ public class DailyIncomeService {
 
     @Autowired
     private UserRepository userRepository;
-@PostConstruct
+
     public void init() {
         yieldUpdate();
     }
-
-    //    @Scheduled(fixedDelay = 30000)
+//    @Scheduled(fixedDelay = 30000)
     @Scheduled(cron = "0 0 0 * * ?")//meia noite eu te Conto
     public void yieldUpdate() {
         List<User> users = userRepository.findAll();
