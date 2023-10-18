@@ -18,6 +18,11 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @PostMapping("/login")
+    public ReponseEntity<DataAuth> loginUser(@RequestBody @valid DataAuth dataAuth) {
+        return ReponseEntity.OK().build();
+    }
+
     @PostMapping
     @Transactional
     public ResponseEntity<User> CreateUser(@RequestBody DataUser dataUser) {
