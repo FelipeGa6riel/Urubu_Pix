@@ -32,14 +32,22 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String cpf;
     private String password;
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.valueOf(0);
     private LocalDateTime date = LocalDateTime.now();
+
+    public User(String name,String email,String cpf,String password) {
+        this.name = name;
+        this.email = email;
+        this.cpf = cpf;
+        this.password = password;
+    }
 
     public User(DataUser dataUser) {
         this.id = dataUser.id();
         this.name = dataUser.nome();
         this.email = dataUser.email();
         this.cpf = dataUser.cpf();
+        this.password = dataUser.password();
     }
 
     public void updateUser(DataUser dataUser) {
