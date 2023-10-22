@@ -32,6 +32,10 @@ public class UserService {
         return user;
     }
 
+    public User findByCpf(String cpf) {
+       return repository.findUserByCpf(cpf).orElseThrow(()-> new RuntimeException("Usuario não tem permissão"));
+    }
+
     public void deleteUser(Long id) {
         repository.deleteById(id);
     }

@@ -21,6 +21,7 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("Urubu_Pix")
                     .withSubject(user.getCpf())
+                    //.withSubject(String.valueOf(user.getId()))
                     .withExpiresAt(dateExpiration())
                     .sign(algorithm);
             return token;

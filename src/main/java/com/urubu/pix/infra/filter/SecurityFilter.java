@@ -1,5 +1,6 @@
 package com.urubu.pix.infra.filter;
 
+import com.urubu.pix.domain.user.User;
 import com.urubu.pix.repositories.UserRepository;
 import com.urubu.pix.services.TokenService;
 import jakarta.servlet.FilterChain;
@@ -28,15 +29,17 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.getToken(request);
         if(token != null) {
             var cpf = tokenService.validateToken(token);
-            UserDetails user = userRepository.findUsersByCpf(cpf);
 
+            UserDetails user = userRepository.findUsersByCpf(cpf);
+            User id = userRepository.findUserByCpf(cpf).orElseThrow(()-> new RuntimeException("Permissão negada"));
+            request.setAttribute("validateId",id.getId());
             var authentication = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request,response);
     }
 
-    private String getToken(HttpServletRequest request) {
+    public String getToken(HttpServletRequest request) {
         var authToken = request.getHeader("Authorization");
         if(authToken == null) return null;
         return authToken.replace("Bearer ","");
